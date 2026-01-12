@@ -258,6 +258,7 @@ a {
 /* Hero Image Card */
 .hero-image {
     position: relative;
+    padding: 2rem;
 }
 
 .hero-card {
@@ -292,14 +293,14 @@ a {
 }
 
 .badge-1 {
-    top: 5%;
-    left: -10%;
+    top: 8%;
+    left: -5%;
     animation-delay: 0.3s;
 }
 
 .badge-2 {
     top: 40%;
-    right: -10%;
+    right: -5%;
     animation-delay: 0.6s;
 }
 
