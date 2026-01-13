@@ -1261,6 +1261,226 @@ html {
     background: white;
 }
 
+/* Free vs Premium Comparison Section */
+.comparison-section {
+    padding: 6rem 0;
+    background: white;
+}
+
+.comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3rem;
+    margin-top: 3rem;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.comparison-card {
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.comparison-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* Free Version */
+.free-version {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+}
+
+.version-header {
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.version-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #1E293B;
+}
+
+.version-body {
+    padding: 2.5rem;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1E293B;
+}
+
+.feature-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lock-icon,
+.cloud-icon {
+    opacity: 0.8;
+}
+
+.ads-badge {
+    background: #DC2626;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    font-weight: 900;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
+}
+
+.btn-free {
+    display: block;
+    width: 100%;
+    padding: 1.25rem;
+    background: #2563EB;
+    color: white;
+    text-align: center;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-decoration: none;
+    transition: all var(--transition-base);
+}
+
+.btn-free:hover {
+    background: #1D4ED8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* Premium Version */
+.premium-version {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 3px solid #F59E0B;
+}
+
+.premium-header {
+    background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.crown-icon {
+    animation: float 3s ease-in-out infinite;
+}
+
+.premium-title {
+    color: #F59E0B;
+    text-shadow: 0 2px 10px rgba(245, 158, 11, 0.5);
+}
+
+.premium-body {
+    background: #1E293B;
+}
+
+.premium-features {
+    gap: 1rem;
+}
+
+.premium-item {
+    color: white;
+}
+
+.premium-item.sparkle span {
+    background: linear-gradient(90deg, #F59E0B, #FCD34D, #F59E0B);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.btn-premium {
+    display: block;
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    color: white;
+    text-align: center;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-decoration: none;
+    transition: all var(--transition-base);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(245, 158, 11, 0.6);
+}
+
+.btn-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-premium:hover::before {
+    left: 100%;
+}
+
+.premium-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.2), transparent 70%);
+    pointer-events: none;
+}
+
+@media (max-width: 900px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+}
+
 .courses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
