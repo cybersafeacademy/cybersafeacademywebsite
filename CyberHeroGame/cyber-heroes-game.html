@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Heroes Quest - CyberSafe Academy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Splash Screen */
+        .splash-screen {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .captain-cyber {
+            font-size: 8rem;
+            animation: bounce 2s infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .splash-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .splash-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn-start {
+            background: #F59E0B;
+            color: white;
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.5rem;
+            font-weight: 900;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+            text-transform: uppercase;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.6);
+        }
+
+        /* Level Selection */
+        .level-selection {
+            padding: 3rem 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .level-title {
+            font-size: 2.5rem;
+            color: #1E293B;
+            margin-bottom: 2rem;
+            font-weight: 900;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 4px solid transparent;
+        }
+
+        .level-card:hover {
+            transform: translateY(-10px);
+            border-color: #F59E0B;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .level-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .level-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* Quiz Screen */
+        .quiz-screen {
+            padding: 2rem;
+            display: none;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: #F8FAFC;
+            border-radius: 15px;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #667eea;
+        }
+
+        .question-counter {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .progress-bar {
+            height: 15px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.5s;
+            border-radius: 10px;
+        }
+
+        .question-card {
+            background: #F8FAFC;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .question-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .answer-btn {
+            padding: 1.5rem;
+            border: 4px solid transparent;
+            border-radius: 15px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .answer-btn:hover:not(.disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .answer-btn.red {
+            background: #EF4444;
+            color: white;
+        }
+
+        .answer-btn.blue {
+            background: #3B82F6;
+            color: white;
+        }
+
+        .answer-btn.yellow {
+            background: #F59E0B;
+            color: white;
+        }
+
+        .answer-btn.green {
+            background: #10B981;
+            color: white;
+        }
+
+        .answer-btn.correct {
+            border-color: #10B981;
+            animation: pulse 0.5s;
+        }
+
+        .answer-btn.wrong {
+            border-color: #EF4444;
+            animation: shake 0.5s;
+        }
+
+        .answer-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* Feedback Screen */
+        .feedback-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .feedback-screen.correct {
+            background: rgba(16, 185, 129, 0.95);
+        }
+
+        .feedback-screen.wrong {
+            background: rgba(59, 130, 246, 0.95);
+        }
+
+        .feedback-content {
+            text-align: center;
+            color: white;
+        }
+
+        .feedback-emoji {
+            font-size: 8rem;
+            margin-bottom: 1rem;
+            animation: bounce 0.5s;
+        }
+
+        .feedback-text {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+
+        .feedback-message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feedback-tip {
+            font-size: 1.25rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin: 0 auto;
+            max-width: 600px;
+        }
+
+        /* Balloons */
+        .balloon {
+            position: fixed;
+            bottom: -150px;
+            width: 60px;
+            height: 80px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: floatUp 4s ease-in forwards;
+            z-index: 999;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes floatUp {
+            0% {
+                bottom: -150px;
+                opacity: 1;
+            }
+            100% {
+                bottom: 120vh;
+                opacity: 0;
+            }
+        }
+
+        .balloon.wobble {
+            animation: floatUp 4s ease-in forwards, wobble 2s ease-in-out infinite;
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0) rotate(-5deg); }
+            50% { transform: translateX(20px) rotate(5deg); }
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confettiFall 3s ease-out forwards;
+            z-index: 998;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                top: -10px;
+                opacity: 1;
+                transform: rotate(0deg);
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+                transform: rotate(720deg);
+            }
+        }
+
+        /* Score Screen */
+        .score-screen {
+            padding: 3rem 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .score-emoji {
+            font-size: 8rem;
+            animation: bounce 2s infinite;
+        }
+
+        .score-title {
+            font-size: 3rem;
+            color: #1E293B;
+            font-weight: 900;
+            margin: 1rem 0;
+        }
+
+        .final-score {
+            font-size: 4rem;
+            color: #667eea;
+            font-weight: 900;
+            margin: 1rem 0;
+        }
+
+        .score-message {
+            font-size: 1.5rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .btn-play-again {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-play-again:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .splash-title {
+                font-size: 2rem;
+            }
+
+            .captain-cyber {
+                font-size: 5rem;
+            }
+
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-text {
+                font-size: 1.25rem;
+            }
+
+            .feedback-text {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Splash Screen -->
+        <div class="splash-screen" id="splashScreen">
+            <div class="captain-cyber">🦸‍♂️</div>
+            <h1 class="splash-title">CYBER HEROES QUEST</h1>
+            <p class="splash-subtitle">Help Captain Cyber protect the digital world!</p>
+            <button class="btn-start" onclick="startGame()">START ADVENTURE!</button>
+        </div>
+
+        <!-- Level Selection -->
+        <div class="level-selection" id="levelSelection">
+            <h2 class="level-title">Choose Your Quest!</h2>
+            <div class="levels-grid">
+                <div class="level-card" onclick="selectLevel('password')">
+                    <div class="level-icon">🔐</div>
+                    <div class="level-name">Password Protector</div>
+                </div>
+                <div class="level-card" onclick="selectLevel('phishing')">
+                    <div class="level-icon">🎣</div>
+                    <div class="level-name">Phishing Detector</div>
+                </div>
+                <div class="level-card" onclick="selectLevel('wifi')">
+                    <div class="level-icon">🌐</div>
+                    <div class="level-name">Wi-Fi Warrior</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div class="quiz-screen" id="quizScreen">
+            <div class="quiz-header">
+                <div class="score-display">⭐ <span id="scoreDisplay">0</span> points</div>
+                <div class="question-counter">Question <span id="questionNumber">1</span>/5</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="question-card">
+                <div class="question-text" id="questionText"></div>
+                <div class="answers-grid" id="answersGrid"></div>
+            </div>
+        </div>
+
+        <!-- Score Screen -->
+        <div class="score-screen" id="scoreScreen">
+            <div class="score-emoji" id="scoreEmoji">🏆</div>
+            <h2 class="score-title" id="scoreTitle">Amazing Job!</h2>
+            <div class="final-score"><span id="finalScore">0</span> / 50</div>
+            <p class="score-message" id="scoreMessage">You're a true Cyber Hero!</p>
+            <button class="btn-play-again" onclick="playAgain()">Play Again</button>
+            <button class="btn-play-again" onclick="backToLevels()">Choose New Quest</button>
+        </div>
+    </div>
+
+    <!-- Feedback Screen -->
+    <div class="feedback-screen" id="feedbackScreen">
+        <div class="feedback-content">
+            <div class="feedback-emoji" id="feedbackEmoji"></div>
+            <div class="feedback-text" id="feedbackText"></div>
+            <div class="feedback-message" id="feedbackMessage"></div>
+            <div class="feedback-tip" id="feedbackTip"></div>
+        </div>
+    </div>
+
+    <!-- Audio Elements (placeholders) -->
+    <audio id="correctSound" preload="auto">
+        <!-- Add source when you have the audio file: <source src="yay.mp3" type="audio/mpeg"> -->
+    </audio>
+    <audio id="wrongSound" preload="auto">
+        <!-- Add source when you have the audio file: <source src="oops.mp3" type="audio/mpeg"> -->
+    </audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
