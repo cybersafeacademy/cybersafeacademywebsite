@@ -350,13 +350,45 @@ function createConfetti() {
 
 // Play Sound
 function playSound(type) {
-    const sound = document.getElementById(type + 'Sound');
-    // When you add audio files, uncomment this:
-    // sound.currentTime = 0;
-    // sound.play().catch(e => console.log('Audio play failed:', e));
+    // Use Web Speech API for AI voice (works in all modern browsers!)
+    const speech = new SpeechSynthesisUtterance();
     
-    // For now, use console log
-    console.log('🔊 Playing sound:', type === 'correct' ? 'YAAAY!' : 'Oopsie!');
+    if (type === 'correct') {
+        // Random excited phrases for correct answers
+        const phrases = [
+            "Yay! Amazing job!",
+            "Woohoo! You got it!",
+            "Awesome! You're a hero!",
+            "Yahoo! Perfect answer!",
+            "Yes! You're crushing it!",
+            "Woo! Super smart!",
+            "Yippee! Well done!",
+            "Hurray! You rock!"
+        ];
+        speech.text = phrases[Math.floor(Math.random() * phrases.length)];
+        speech.pitch = 1.5; // Higher pitch = more excited/kid-friendly
+        speech.rate = 1.2; // Slightly faster = more energetic
+        speech.volume = 1.0; // Full volume
+    } else {
+        // Gentle encouraging phrases for wrong answers
+        const phrases = [
+            "Oopsie! That's okay!",
+            "Nice try! Keep going!",
+            "Almost! You'll get it!",
+            "Good effort! Try again!",
+            "Don't worry! Heroes learn!"
+        ];
+        speech.text = phrases[Math.floor(Math.random() * phrases.length)];
+        speech.pitch = 1.2; // Still friendly
+        speech.rate = 1.0; // Normal speed
+        speech.volume = 0.8; // Slightly quieter
+    }
+    
+    // Speak!
+    window.speechSynthesis.cancel(); // Stop any previous speech
+    window.speechSynthesis.speak(speech);
+    
+    console.log('🔊 Playing AI voice:', speech.text);
 }
 
 // Show Score Screen
@@ -369,38 +401,63 @@ function showScoreScreen() {
     
     document.getElementById('finalScore').textContent = finalScore;
     
-    let emoji, title, message;
+    let emoji, title, message, voiceMessage;
     
     if (finalScore === maxScore) {
         emoji = '🏆';
         title = 'PERFECT SCORE!';
         message = "You're a LEGENDARY Cyber Hero! 🌟";
+        voiceMessage = "Wow! Perfect score! You are a legendary cyber hero!";
     } else if (finalScore >= maxScore * 0.8) {
         emoji = '⭐';
         title = 'AMAZING JOB!';
         message = "You're a true Cyber Champion! 🦸";
+        voiceMessage = "Amazing job! You're a true cyber champion!";
     } else if (finalScore >= maxScore * 0.6) {
         emoji = '🎊';
         title = 'GREAT WORK!';
         message = "You're becoming a Cyber Hero! 💪";
+        voiceMessage = "Great work! You're becoming a cyber hero!";
     } else if (finalScore >= maxScore * 0.4) {
         emoji = '😊';
         title = 'GOOD EFFORT!';
         message = "Keep practicing, young hero! 📚";
+        voiceMessage = "Good effort! Keep practicing young hero!";
     } else {
         emoji = '🦸';
         title = 'NICE TRY!';
         message = "Every hero starts somewhere! Try again! 💙";
+        voiceMessage = "Nice try! Every hero starts somewhere!";
     }
     
     document.getElementById('scoreEmoji').textContent = emoji;
     document.getElementById('scoreTitle').textContent = title;
     document.getElementById('scoreMessage').textContent = message;
     
-    // Celebration for high scores
+    // Celebration voice for high scores
     if (finalScore >= maxScore * 0.6) {
         createBalloons();
         createConfetti();
+        
+        // AI Voice celebration
+        const speech = new SpeechSynthesisUtterance(voiceMessage);
+        speech.pitch = 1.5;
+        speech.rate = 1.1;
+        speech.volume = 1.0;
+        
+        setTimeout(() => {
+            window.speechSynthesis.speak(speech);
+        }, 500);
+    } else {
+        // Encouraging voice for lower scores
+        const speech = new SpeechSynthesisUtterance(voiceMessage);
+        speech.pitch = 1.2;
+        speech.rate = 1.0;
+        speech.volume = 0.9;
+        
+        setTimeout(() => {
+            window.speechSynthesis.speak(speech);
+        }, 500);
     }
 }
 
