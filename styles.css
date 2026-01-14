@@ -1737,6 +1737,51 @@ html {
     animation-delay: 2.5s;
 }
 
+/* Floating Characters */
+.floating-character {
+    position: absolute;
+    font-size: 3.5rem;
+    animation: float 6s ease-in-out infinite;
+    z-index: 2;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.floating-character.char-1 {
+    top: 18%;
+    left: 12%;
+    animation-delay: 0s;
+}
+
+.floating-character.char-2 {
+    top: 28%;
+    right: 18%;
+    animation-delay: 1.2s;
+}
+
+.floating-character.char-3 {
+    top: 50%;
+    left: 5%;
+    animation-delay: 2.4s;
+}
+
+.floating-character.char-4 {
+    bottom: 25%;
+    right: 10%;
+    animation-delay: 3.6s;
+}
+
+.floating-character.char-5 {
+    bottom: 15%;
+    left: 25%;
+    animation-delay: 4.8s;
+}
+
+.floating-character.char-6 {
+    top: 38%;
+    right: 5%;
+    animation-delay: 1.8s;
+}
+
 @keyframes float {
     0%, 100% {
         transform: translateY(0) scale(1);
