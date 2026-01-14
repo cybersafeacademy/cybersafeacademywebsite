@@ -39,6 +39,26 @@
             color: white;
         }
 
+        .character-squad {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .character {
+            font-size: 4rem;
+            animation: bounce 2s infinite;
+        }
+
+        .character:nth-child(1) { animation-delay: 0s; }
+        .character:nth-child(2) { animation-delay: 0.2s; }
+        .character:nth-child(3) { animation-delay: 0.4s; }
+        .character:nth-child(4) { animation-delay: 0.6s; }
+        .character:nth-child(5) { animation-delay: 0.8s; }
+        .character:nth-child(6) { animation-delay: 1s; }
+
         .captain-cyber {
             font-size: 8rem;
             animation: bounce 2s infinite;
@@ -48,6 +68,39 @@
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-20px); }
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            z-index: 1000;
+            border: 3px solid #667eea;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .splash-screen .back-button {
+            display: none;
         }
 
         .splash-title {
@@ -456,13 +509,25 @@
         <!-- Splash Screen -->
         <div class="splash-screen" id="splashScreen">
             <div class="captain-cyber">🦸‍♂️</div>
+            <div class="character-squad">
+                <div class="character">🦖</div>
+                <div class="character">👸</div>
+                <div class="character">🐶</div>
+                <div class="character">🐱</div>
+                <div class="character">🧸</div>
+            </div>
             <h1 class="splash-title">CYBER HEROES QUEST</h1>
-            <p class="splash-subtitle">Help Captain Cyber protect the digital world!</p>
+            <p class="splash-subtitle">Help Captain Cyber and friends protect the digital world!</p>
             <button class="btn-start" onclick="startGame()">START ADVENTURE!</button>
         </div>
 
         <!-- Level Selection -->
         <div class="level-selection" id="levelSelection">
+            <div class="back-button" onclick="backToHome()" title="Back to Website">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="3">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <h2 class="level-title">Choose Your Quest!</h2>
             <div class="levels-grid">
                 <div class="level-card" onclick="selectLevel('password')">
@@ -482,6 +547,11 @@
 
         <!-- Quiz Screen -->
         <div class="quiz-screen" id="quizScreen">
+            <div class="back-button" onclick="backToLevels()" title="Back to Levels">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="3">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div class="quiz-header">
                 <div class="score-display">⭐ <span id="scoreDisplay">0</span> points</div>
                 <div class="question-counter">Question <span id="questionNumber">1</span>/5</div>
@@ -497,6 +567,11 @@
 
         <!-- Score Screen -->
         <div class="score-screen" id="scoreScreen">
+            <div class="back-button" onclick="backToLevels()" title="Back to Levels">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="3">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div class="score-emoji" id="scoreEmoji">🏆</div>
             <h2 class="score-title" id="scoreTitle">Amazing Job!</h2>
             <div class="final-score"><span id="finalScore">0</span> / 50</div>
