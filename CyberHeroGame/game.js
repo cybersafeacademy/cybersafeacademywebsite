@@ -3,12 +3,24 @@ let currentLevel = '';
 let currentQuestion = 0;
 let score = 0;
 let questions = [];
+let playerPosition = 1; // Snakes & Ladders position (1-10)
 
 // ✅ CREATE AUDIO OBJECTS ONCE AT THE TOP
 const yaySound = new Audio('/CyberHeroGame/yay.mp3');
 const uhohSound = new Audio('/CyberHeroGame/ohno.mp3');
 
-// Question Database
+// Snakes & Ladders Configuration
+const ladders = {
+    3: 7,  // Square 3 → Jump to 7! 🪜
+    5: 9   // Square 5 → Jump to 9! 🪜
+};
+
+const snakes = {
+    8: 4,  // Square 8 → Slide to 4! 🐍
+    10: 6  // Square 10 → Slide to 6! 🐍 (but only if they get question 10 wrong!)
+};
+
+// Question Database (10 questions per level!)
 const questionBank = {
     password: [
         {
@@ -60,6 +72,56 @@ const questionBank = {
                 { text: "Every day", correct: false }
             ],
             tip: "Changing passwords regularly keeps hackers guessing! Like changing your secret handshake! 🤝"
+        },
+        {
+            question: "What makes a password REALLY strong? 💪",
+            answers: [
+                { text: "Using your pet's name", correct: false },
+                { text: "At least 12 characters with letters, numbers & symbols", correct: true },
+                { text: "Your birthday", correct: false },
+                { text: "The word 'password'", correct: false }
+            ],
+            tip: "Long passwords with a mix of everything are super strong! Like a superhero team! 🦸‍♂️🦸‍♀️"
+        },
+        {
+            question: "Can you use the SAME password for everything? 🤔",
+            answers: [
+                { text: "Yes! Easier to remember!", correct: false },
+                { text: "NO! Each account needs different passwords", correct: true },
+                { text: "Only for important stuff", correct: false },
+                { text: "Yes, if it's really strong", correct: false }
+            ],
+            tip: "Different passwords protect you! If one gets hacked, the others stay safe! 🛡️"
+        },
+        {
+            question: "Your friend sees you type your password. What do you do? 👀",
+            answers: [
+                { text: "It's fine, they're my friend", correct: false },
+                { text: "Change my password right away!", correct: true },
+                { text: "Tell them not to tell anyone", correct: false },
+                { text: "Make them promise to forget it", correct: false }
+            ],
+            tip: "If someone sees your password, change it! Better safe than sorry! 🔄"
+        },
+        {
+            question: "What's a good way to remember lots of passwords? 🧠",
+            answers: [
+                { text: "Write them all on paper", correct: false },
+                { text: "Use a password manager", correct: true },
+                { text: "Use simple passwords", correct: false },
+                { text: "Tell someone to remember them", correct: false }
+            ],
+            tip: "Password managers remember all your passwords safely! Like a digital brain! 🤖"
+        },
+        {
+            question: "Is 'ilovepizza123' a good password? 🍕",
+            answers: [
+                { text: "Yes! Pizza is awesome!", correct: false },
+                { text: "No - too easy to guess!", correct: true },
+                { text: "Yes, if I really love pizza", correct: false },
+                { text: "Only for pizza websites", correct: false }
+            ],
+            tip: "Common words and numbers are easy for hackers to guess! Be creative and random! 🎨"
         }
     ],
     phishing: [
@@ -112,6 +174,56 @@ const questionBank = {
                 { text: "Share it with everyone", correct: false }
             ],
             tip: "Don't open links from people you don't know! They might be phishing! 🎣"
+        },
+        {
+            question: "You get a text: 'Your package is stuck! Click here NOW!' What do you do? 📦",
+            answers: [
+                { text: "Click immediately!", correct: false },
+                { text: "Ask a parent if we ordered anything", correct: true },
+                { text: "Forward to my friends", correct: false },
+                { text: "Reply with my address", correct: false }
+            ],
+            tip: "Scammers create fake urgency! Always check with an adult first! ⏰"
+        },
+        {
+            question: "An email has LOTS of exclamation marks!!!! Is that normal? 📧",
+            answers: [
+                { text: "Yes! They're excited!", correct: false },
+                { text: "NO! That's suspicious!", correct: true },
+                { text: "Only if it's good news", correct: false },
+                { text: "It means it's important", correct: false }
+            ],
+            tip: "Too many exclamation marks is a phishing red flag! Real companies don't do that! 🚩"
+        },
+        {
+            question: "Someone says 'I'm a Nigerian prince with money for you!' Is it real? 👑",
+            answers: [
+                { text: "Yes! I'm rich!", correct: false },
+                { text: "NO! Classic phishing scam!", correct: true },
+                { text: "Maybe, I should reply", correct: false },
+                { text: "Only if they prove it", correct: false }
+            ],
+            tip: "The Nigerian Prince scam is one of the oldest tricks! Never fall for it! 🎣"
+        },
+        {
+            question: "An email link ends in '.xyz.fake.com' - Should you trust it? 🔗",
+            answers: [
+                { text: "Sure! Looks official!", correct: false },
+                { text: "NO! Weird domains are suspicious!", correct: true },
+                { text: "Yes, if the email looks real", correct: false },
+                { text: "Only on Tuesdays", correct: false }
+            ],
+            tip: "Check the FULL web address! Scammers use fake domains to trick you! 👀"
+        },
+        {
+            question: "You get a scary email: 'Your account will close in 1 hour!' What do you do? ⏰",
+            answers: [
+                { text: "Panic and click the link!", correct: false },
+                { text: "Ignore it - it's a scare tactic!", correct: true },
+                { text: "Send them my password", correct: false },
+                { text: "Forward it to everyone", correct: false }
+            ],
+            tip: "Phishers use fear to make you act fast! Stay calm and don't click! 🧘"
         }
     ],
     wifi: [
@@ -164,6 +276,56 @@ const questionBank = {
                 { text: "Yes, and tell my friends", correct: false }
             ],
             tip: "Funny network names can be tricks! Stick to networks you know and trust! 😄"
+        },
+        {
+            question: "What's the SAFEST type of Wi-Fi? 🔒",
+            answers: [
+                { text: "Any Wi-Fi is safe!", correct: false },
+                { text: "Home Wi-Fi with WPA2 or WPA3 encryption", correct: true },
+                { text: "Airport Wi-Fi", correct: false },
+                { text: "Any Wi-Fi with a funny name", correct: false }
+            ],
+            tip: "WPA2/WPA3 are like super locks for your Wi-Fi! Always use them at home! 🔐"
+        },
+        {
+            question: "Can hackers see what you do on public Wi-Fi? 👀",
+            answers: [
+                { text: "No, Wi-Fi is always private", correct: false },
+                { text: "YES! They can see your activity!", correct: true },
+                { text: "Only if you tell them", correct: false },
+                { text: "Only on Mondays", correct: false }
+            ],
+            tip: "Public Wi-Fi is like a glass window - people can see through it! Be careful! 🪟"
+        },
+        {
+            question: "Should you let your smart watch auto-connect to any Wi-Fi? ⌚",
+            answers: [
+                { text: "Yes! More connections = better!", correct: false },
+                { text: "NO! Only connect to trusted networks", correct: true },
+                { text: "Only during school", correct: false },
+                { text: "Yes, watches are safe", correct: false }
+            ],
+            tip: "Auto-connect can link you to dangerous networks! Turn it off! 📵"
+        },
+        {
+            question: "Your friend's home Wi-Fi asks for a password. That's... 🤔",
+            answers: [
+                { text: "Annoying and unnecessary", correct: false },
+                { text: "GOOD! Passwords protect networks!", correct: true },
+                { text: "Weird and suspicious", correct: false },
+                { text: "Only needed for adults", correct: false }
+            ],
+            tip: "Passwords on Wi-Fi are like locks on doors! They keep bad guys out! 🚪🔒"
+        },
+        {
+            question: "Can you trust a Wi-Fi network just because it has a lock icon? 🔐",
+            answers: [
+                { text: "YES! Locks mean safe!", correct: false },
+                { text: "Not always! Still check if you know the network", correct: true },
+                { text: "Only if it's gold colored", correct: false },
+                { text: "Locks always mean FBI approved", correct: false }
+            ],
+            tip: "A lock means encrypted, but you still need to trust WHO runs the network! 🕵️"
         }
     ]
 };
@@ -201,6 +363,7 @@ function selectLevel(level) {
     questions = questionBank[level];
     currentQuestion = 0;
     score = 0;
+    playerPosition = 1; // Reset to starting position
     
     document.getElementById('levelSelection').style.display = 'none';
     document.getElementById('quizScreen').style.display = 'block';
@@ -217,9 +380,13 @@ function loadQuestion() {
     document.getElementById('questionText').textContent = question.question;
     document.getElementById('scoreDisplay').textContent = score;
     
-    // Update progress bar
-    const progress = (questionNumber / questions.length) * 100;
-    document.getElementById('progressFill').style.width = progress + '%';
+    // Update board - remove active class from all squares
+    document.querySelectorAll('.board-square').forEach(sq => sq.classList.remove('active'));
+    // Add active class to current position
+    const currentSquare = document.querySelector(`[data-square="${playerPosition}"]`);
+    if (currentSquare) {
+        currentSquare.classList.add('active');
+    }
     
     // Load answers
     const answersGrid = document.getElementById('answersGrid');
@@ -257,15 +424,26 @@ function selectAnswer(index) {
     // Mark correct/wrong
     buttons[index].classList.add(isCorrect ? 'correct' : 'wrong');
     
+    // Move player on board
     if (isCorrect) {
         score += 10;
-        document.getElementById('scoreDisplay').textContent = score;
+        playerPosition = Math.min(10, playerPosition + 1); // Move forward
+        movePlayer(playerPosition);
         showCorrectFeedback(question.tip);
         createBalloons();
         createConfetti();
     } else {
+        playerPosition = Math.max(1, playerPosition - 1); // Move back (min 1)
+        movePlayer(playerPosition);
         showWrongFeedback(question.tip);
     }
+    
+    document.getElementById('scoreDisplay').textContent = score;
+    
+    // Check for ladders and snakes after a delay
+    setTimeout(() => {
+        checkLaddersAndSnakes();
+    }, 1500);
     
     // Next question after delay
     setTimeout(() => {
@@ -275,7 +453,69 @@ function selectAnswer(index) {
         } else {
             showScoreScreen();
         }
-    }, 3000);
+    }, 4000);
+}
+
+// Move Player on Board
+function movePlayer(newPosition) {
+    // Remove player from old square
+    document.querySelectorAll('.player-token').forEach(token => token.remove());
+    
+    // Remove active class from all squares
+    document.querySelectorAll('.board-square').forEach(sq => sq.classList.remove('active'));
+    
+    // Add player to new square
+    const newSquare = document.querySelector(`[data-square="${newPosition}"]`);
+    if (newSquare) {
+        const playerToken = document.createElement('div');
+        playerToken.className = 'player-token';
+        playerToken.id = 'playerToken';
+        playerToken.textContent = '🦸‍♂️';
+        newSquare.appendChild(playerToken);
+        newSquare.classList.add('active');
+    }
+}
+
+// Check for Ladders and Snakes
+function checkLaddersAndSnakes() {
+    let message = '';
+    let newPosition = playerPosition;
+    
+    // Check for ladder
+    if (ladders[playerPosition]) {
+        newPosition = ladders[playerPosition];
+        message = `🪜 LADDER! Climbing from ${playerPosition} to ${newPosition}!`;
+        playerPosition = newPosition;
+        movePlayer(playerPosition);
+        showSpecialMessage(message, 'ladder');
+        yaySound.play().catch(e => console.log('Audio failed:', e));
+    }
+    // Check for snake
+    else if (snakes[playerPosition]) {
+        newPosition = snakes[playerPosition];
+        message = `🐍 SNAKE! Sliding from ${playerPosition} to ${newPosition}!`;
+        playerPosition = newPosition;
+        movePlayer(playerPosition);
+        showSpecialMessage(message, 'snake');
+        uhohSound.play().catch(e => console.log('Audio failed:', e));
+    }
+}
+
+// Show Special Message for Ladders/Snakes
+function showSpecialMessage(message, type) {
+    const feedbackScreen = document.getElementById('feedbackScreen');
+    
+    feedbackScreen.className = `feedback-screen ${type === 'ladder' ? 'correct' : 'wrong'}`;
+    feedbackScreen.style.display = 'flex';
+    
+    document.getElementById('feedbackEmoji').textContent = type === 'ladder' ? '🪜' : '🐍';
+    document.getElementById('feedbackText').textContent = type === 'ladder' ? 'LADDER!' : 'SNAKE!';
+    document.getElementById('feedbackMessage').textContent = message;
+    document.getElementById('feedbackTip').textContent = '';
+    
+    setTimeout(() => {
+        feedbackScreen.style.display = 'none';
+    }, 2000);
 }
 
 // Show Correct Feedback
@@ -408,6 +648,7 @@ function showScoreScreen() {
 function playAgain() {
     currentQuestion = 0;
     score = 0;
+    playerPosition = 1; // Reset to starting position
     document.getElementById('scoreScreen').style.display = 'none';
     document.getElementById('quizScreen').style.display = 'block';
     loadQuestion();
