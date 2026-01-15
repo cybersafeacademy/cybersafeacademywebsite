@@ -28,9 +28,27 @@ const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
 const navMenu = document.querySelector('.nav-menu');
 
 if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
+    mobileMenuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
         navMenu.classList.toggle('active');
         mobileMenuToggle.classList.toggle('active');
+    });
+    
+    // Close menu when clicking a link
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+        });
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!navMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+        }
     });
 }
 
